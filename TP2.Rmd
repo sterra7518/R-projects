@@ -1,0 +1,710 @@
+---
+title: "TP2-ISIFAR"
+author: "Sofiane"
+date: '2023-11-16'
+output: html_document
+---
+
+
+
+# 1 - Description du jeu de données et préliminaires
+
+Dépuis 1948, aux Etats-Unis, le Bureau du Recensement et le Bureau des Statistiques du Travail réalisent chqaue mois une équipe appelés *Current Population Survey* en receuillant des informations sur les membres de plus de 15 ans d'environ 150 000 foyers. Cette étude est la principale source de rensignements sur les caractéristiques de la population active du pays. Les données du fichier **Recensement.txt** sont extraites de l'enquête de juillet 2012.
+
+```{r p1 ouvrir_fichier}
+
+rec <- read.table('Recensement.txt',header=T)
+
+head(rec,10)
+```
+
+
+L'option **header** permet d'indiquer au logiciel R que le fichier contient des noms pour les colonnes : il s'agit de noms des différentes variables (chaque ligne représente un individu et les colonnes représente des variables)
+
+On peut voir le résumer de notre jeux de données suivant :
+
+```{r p2 fichier}
+summary(rec)
+
+```
+
+L'unité statiqtiue est l'habitant des foyers dont sa taille est de 599.
+
+Les variables qualitatives sont :
++ SEXE
++ REGION
++ STAT_MAR
++ SYNDICAT
+
+
+Les variables quantitatives sont :
++ AGE
++ SAL_HOR
++ NB_PERS
++ NB_ENF
++ REV_FOYER
+
+
+
+
+
+
+# 2 - Analyse des variables qualitatives
+
+### 2A - Analyse de l'ensemble de l'echantillon
+
+L'objectif de cette section est de décrire l'échantillon en se basant uniquement sur les variables qualitatives.
+
+#### Variable SEXE
+
+On étudie la variable SEXE
+
+```{r p3 sexe}
+
+#Enregistement de la variables SEXE
+
+sexe <-rec$SEXE
+
+head(sexe,5)
+
+#Distribution des éffectif
+eff.sexe = table(sexe)
+eff.sexe
+
+#Distribution des éffectif en fréquence
+prop.sexe <- round(prop.table(eff.sexe),digit=3)
+prop.sexe
+```
+
+On va tracer deux diagrammes (en barres et circulaire) de la variable.
+
+```{r p14 graph_sex}
+#Détermination du nombre de graphique dans la fenêtre
+par(mfrow=c(1,2))
+
+#diagramme en bâton
+barplot(prop.sexe,main="Distribution selon le sexe",col = c("pink","blue"))
+#diagramme circulaire
+pie(prop.sexe,main="Distribution selon le sexe",col = c("pink","blue"))
+```
+
+*On remarque une quasi-parité entre les hommes et les femmes*
+
+
+On peut y faire aussi pour les autres variables
+
+
+### Variable REGION
+
+```{r p5 région}
+
+
+region <-rec$REGION
+
+head(region,5)
+
+#Distribution des éffectif
+eff.region = table(region)
+eff.region
+
+#Distribution des éffectif en fréquence
+prop.region <- round(prop.table(eff.region),digit=3)
+prop.region
+
+#Détermination du nombre de graphique dans la fenêtre
+par(mfrow=c(1,2))
+
+#diagramme en bâton
+barplot(prop.region,main="Distribution selon les régions",col = c("red","yellow","green","blue"))
+#diagramme circulaire
+pie(prop.region,main="Distribution selon les régions",col = c("red","yellow","green","blue"))
+```
+
+*Les répartitons entre-eux sont assez équitables*
+
+### Variable STATUT-MARITAL
+
+```{r p6 statu_mari}
+
+stat_mari <-rec$STAT_MARI
+
+head(stat_mari,5)
+
+#Distribution des éffectif
+eff.stat_mari = table(stat_mari)
+eff.stat_mari
+
+#Distribution des éffectif en fréquence
+prop.stat_mari <- round(prop.table(eff.stat_mari),digit=3)
+prop.stat_mari
+
+#Détermination du nombre de graphique dans la fenêtre
+par(mfrow=c(1,2))
+
+#diagramme en bâton
+barplot(prop.stat_mari,main="Distribution selon les statuts maritales",col = c("red","yellow","green","blue","orange"))
+#diagramme circulaire
+pie(prop.stat_mari,main="Distribution selon les statuts maritales",col = c("red","yellow","green","blue","orange"))
+```
+
+*Plus de 50% du foyers sont mariées et tiers d'entre-eux sont célibataires*
+
+
+### Variable CATEGORIE
+
+```{r p7 categorie} 
+categorie <-rec$CATEGORIE
+
+head(stat_mari,5)
+
+#Distribution des éffectif
+eff.categorie = table(categorie)
+eff.categorie
+
+#Distribution des éffectif en fréquence
+prop.categorie <- round(prop.table(eff.categorie),digit=3)
+prop.categorie
+
+#diagramme en bâton
+barplot(prop.categorie,main="Distribution selon les catégories professionnelles",col = c("red","yellow","green","blue","orange","brown","grey","pink","violet","white"))
+#diagramme circulaire
+pie(prop.categorie,main="Distribution selon les catégories professionnelles",col = c("red","yellow","green","blue","orange","brown","grey","pink","violet","white"))
+``` 
+
+*Les profession libérales et les activités de services sont les plus représentés*
+
+
+#### Variable SYNDICAT
+
+```{r p8 syndicat} 
+syndicat <-rec$SYNDICAT
+
+head(syndicat,5)
+
+#Distribution des éffectif
+eff.syndicat = table(syndicat)
+eff.syndicat
+
+#Distribution des éffectif en fréquence
+prop.syndicat <- round(prop.table(eff.syndicat),digit=3)
+prop.syndicat
+
+#Détermination du nombre de graphique dans la fenêtre
+par(mfrow=c(1,2))
+
+#diagramme en bâton
+barplot(prop.syndicat,main="Distribution des syndicats ou non",col = c("red","green"))
+#diagramme circulaire
+pie(prop.syndicat,main="Distribution des syndicats ou non",col = c("red","green"))
+``` 
+
+*Plus de 82% des personnes ne font pas partis avec le syndicat*
+
+
+#### Varible NIVEAU D'ETUDES
+
+```{r p9 etudes} 
+niv_etudes <-rec$NIV_ETUDES
+
+head(niv_etudes,5)
+
+#Distribution des éffectif
+eff.niv_etudes = table(niv_etudes)
+eff.niv_etudes
+
+#Distribution des éffectif en fréquence
+prop.niv_etudes <- round(prop.table(eff.niv_etudes),digit=3)
+prop.niv_etudes
+
+#Détermination du nombre de graphique dans la fenêtre
+
+#diagramme en bâton
+barplot(prop.niv_etudes,main="Distribution selons leurs niveau d'études",col = c("darkred","brown4","brown","brown3","brown2","brown1","coral","coral1","cyan","cyan1","cyan2","cyan3","darkcyan","cyan2","darkblue"))
+#diagramme circulaire
+pie(prop.niv_etudes,main="Distribution selons leurs niveau d'études",col = c("darkred","brown4","brown","brown3","brown2","brown1","coral","coral1","cyan","cyan1","cyan2","cyan3","darkcyan","cyan2","darkblue"))
+``` 
+
+
+### 2B - Analyse de la catégorie socio-professionnelle
+
+Le but de cette section est de comparer des groupes d'individus de catégories professionnelles différentes. On pourra par exemple comparer les cadres (1) aux individus exerçant une profession libérale(2) et aux employés du bureau(5)
+
+On pourra représenter la distribution de chaque variable pour les 3 catégories sur un même graphique si le type de graphique s'y prête, et sur 3 graphiques juxtaposés sinon.
+
+```{r p10}
+#On a transformer nos 3 VALEURS en variables
+cadre <- rec[rec[,"CATEGORIE"]== 1,]
+liberale <- rec[rec[,"CATEGORIE"]== 2,]
+employe <- rec[rec[,"CATEGORIE"]== 5,]
+
+# Age
+age.categ = c(mean(cadre$AGE),mean(liberale$AGE),mean(employe$AGE))
+names(age.categ) = c('cadre','libérale','employé')
+barplot(age.categ,main ="Comparaison d'âge moyen selon les 3 catégories",col = c('red','orange','green'),ylim = c(40,45))
+
+#Nombre d'enfants
+enf.categ = c(mean(cadre$NB_ENF),mean(liberale$NB_ENF),mean(employe$NB_ENF))
+names(enf.categ) = c('cadre','libérale','employé')
+enf.categ
+barplot(enf.categ,main ="Comparaison du nombre d'enfants moyen aux foyers selon les 3 catégories",col = c('red','orange','green'),ylim = c(0,3))
+
+```
+
+
+
+
+
+
+
+
+# 3 - Analyse de variables quantitatives 
+
+Le bur de cette section est d'analyser les variables quantitatives du jeu de données.
+
+### 3B - Analyse de l'ensemble des salariés
+
+#### - Variable ÂGE
+
+```{r p11_age}
+
+#On enregistre la variable
+age = rec$AGE
+
+head(age,5)
+
+#On établi une distribution en effectifs
+eff.age <- table(age)
+eff.age
+
+#On établi un distribution en fréquences
+prop.age <- round(prop.table(eff.age),digit=2)
+prop.age
+
+
+#On construit un diagramme en bâton
+plot(x = eff.age,type = 'h')
+
+
+
+#Fonction empirique
+plot(ecdf(eff.age))
+
+#Histogramme
+hist(eff.age,main = "Histogramme")
+
+```
+
+#### Variables Salaires Horaires
+
+``` {r p12 salaire}
+
+#On met une variable
+salaire <- rec$SAL_HOR
+
+head(salaire,5)
+
+
+#On établi une distribution en effectifs
+eff.sal <- table(salaire)
+eff.sal
+
+#On établi un distribution en fréquences
+prop.sal <- round(prop.table(eff.sal),digit=2)
+prop.sal
+
+
+#On construit un diagramme en bâton
+plot(x = eff.sal,type = 'h')
+
+
+
+#Fonction empirique
+plot(ecdf(eff.sal))
+
+#Histogramme
+hist(eff.age,breaks =10,main = "Histogramme")
+
+```
+
+
+
+#### Nombre de foyers
+
+``` {r p13 nombres}
+
+#On met une variable
+foyer <- rec$NB_PERS
+head(foyer,5)
+
+#On établi une distribution en effectifs
+eff.foyer <- table(foyer)
+eff.foyer
+
+#On établi un distribution en fréquences
+prop.foyer <- round(prop.table(eff.foyer),digit=2)
+prop.foyer
+
+#On construit un diagramme en bâton
+plot(x = eff.foyer,type = 'h')
+
+#Fonction empirique
+plot(ecdf(eff.foyer))
+
+#Histogramme
+hist(eff.foyer,breaks =10,main = "Histogramme")
+
+```
+
+#### Variables du nombre d'enfants
+
+```{r p14 enfants}
+#On met une variable
+enfant <- rec$NB_ENF
+head(enfant,5)
+
+#On établi une distribution en effectifs
+eff.enfant <- table(enfant)
+eff.enfant
+
+#On établi un distribution en fréquences
+prop.enfant <- round(prop.table(eff.enfant),digit=2)
+prop.enfant
+
+#On construit un diagramme en bâton
+plot(x = eff.enfant,type = 'h')
+
+#Fonction empirique
+plot(ecdf(eff.enfant))
+
+#Histogramme
+hist(eff.enfant,breaks =10,main = "Histogramme")
+```
+
+
+### 3B - Catégorie professionnelle
+
+On s'intérèrsse aux 3 variables étudiées  prédédemment et on étudie nos variables quantitatives par rapport à ces variables.
+
+
+
+##### âge 
+
+Pour chacun de nos 3 catégories socio-professionnelle, on établie une études comparable avec l'aide d'un diagramme à bâton , d'une fonction empirique et d'un histogramme par rapport à l'âge de nos foyers
+
+```{r p15 age2}
+
+par(mfrow=c(1,3))
+
+#On construit un diagramme en bâton
+plot(x = table(cadre$AGE),type = 'h', main="cadre",xlim=c(15,75))
+plot(x = table(liberale$AGE),type = 'h',main='prof liberale',xlim=c(15,75))
+plot(x = table(employe$AGE),type = 'h',main = "employée",xlim=c(15,75))
+
+par(mfrow=c(1,3))
+
+#Fonction empirique
+plot(ecdf(table(cadre$AGE)))
+plot(ecdf(table(liberale$AGE)))
+plot(ecdf(table(employe$AGE)))
+
+
+par(mfrow=c(1,3))
+
+#Histogramme
+hist(table(cadre$AGE),main = "cadre",col = c('red'))
+hist(table(liberale$AGE),main = "libérale",col = c('green'))
+hist(table(employe$AGE),main = "employée",col=c('blue'))
+```
+
+
+#####  salaire horaires (en dollars)
+
+Pour chacun de nos 3 catégories socio-professionnelle, on établie une études comparable avec l'aide d'un diagramme à bâton , d'une fonction empirique et d'un histogramme par rapport aux différents salaires de nos foyers.
+
+```{r p16 salaire2}
+
+par(mfrow=c(1,3))
+
+#On construit un diagramme en bâton
+plot(x = table(cadre$SAL_HOR),type = 'h', main="cadre")
+plot(x = table(liberale$SAL_HOR),type = 'h',main='prof liberale')
+plot(x = table(employe$SAL_HOR),type = 'h',main = "employée")
+
+par(mfrow=c(1,3))
+
+#Fonction empirique
+plot(ecdf(table(cadre$SAL_HOR)))
+plot(ecdf(table(liberale$SAL_HOR)))
+plot(ecdf(table(employe$SAL_HOR)))
+
+
+par(mfrow=c(1,3))
+
+#Histogramme
+hist(table(cadre$SAL_HOR),main = "cadre",col = c('red'))
+hist(table(liberale$SAL_HOR),main = "libérale",col = c('green'))
+hist(table(employe$SAL_HOR),main = "employée",col=c('blue'))
+```
+
+#####  nombre d'enfants
+
+Pour chacun de nos 3 catégories socio-professionnelle, on établie une études comparable avec l'aide d'un diagramme à bâton , d'une fonction empirique et d'un histogramme par rapport aux nombre d'enfants que nos foyers ont.
+
+```{r p17 enfant2}
+
+par(mfrow=c(1,3))
+
+#On construit un diagramme en bâton
+plot(x = table(cadre$NB_ENF),type = 'h', main="cadre",xlim=c(0,6))
+plot(x = table(liberale$NB_ENF),type = 'h',main='prof liberale',xlim=c(0,6))
+plot(x = table(employe$NB_ENF),type = 'h',main = "employée",xlim=c(0,6))
+
+par(mfrow=c(1,3))
+
+#Fonction empirique
+plot(ecdf(table(cadre$NB_ENF)))
+plot(ecdf(table(liberale$NB_ENF)))
+plot(ecdf(table(employe$NB_ENF)))
+
+
+par(mfrow=c(1,3))
+
+#Histogramme
+hist(table(cadre$NB_ENF),main = "cadre",col = c('red'))
+hist(table(liberale$NB_ENF),main = "libérale",col = c('green'))
+hist(table(employe$NB_ENF),main = "employée",col=c('blue'))
+```
+
+
+
+
+
+# 4 - Indicateurs statistiques 
+
+### 4A - Analyse de l'ensemble des salariés
+
+L'objectif de cette section est de décrire l'échantillon dans son ensemble
+
+Pour chaque variable du fichier, on calcul les indicateurs statistiques partinents. On pourra utiliser les fonctions : **mean**, **median**, **sd**, ect...
+
+
+```{r p17_chap4}
+summary(rec)
+```
+
+On cherche le mode qui est la valeur de éffectif qui est la plus représentée. 
+
+```{R p18_mode}
+
+# Fonction pour avoir le mode
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
+#vecteur montrant nos modes sur nos variable quantitatives
+mode = matrix(c(getmode(age),getmode(rec$SAL_HOR),getmode(rec$NB_PERS),getmode(rec$NB_ENF),getmode(rec$REV_FOYER)),1,5)
+
+colnames(mode) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+
+mode
+
+
+
+```
+
+
+Ensuite, on aussi analyser les variances utilisés par R avec la fonction **varn** donnant la variance avec la normalisation 1/n. Analyson ensemble : 
+
+```{R p19_variance}
+
+# Fonction pour avoir la normalisation de la variance
+varn <- function(v) {
+   n <- length(v)
+   res = (n-1)*var(v)/n
+   return(res)
+}
+
+
+#vecteur montrant nos modes sur nos variable quantitatives
+variance = matrix(c(varn(age),varn(rec$SAL_HOR),varn(rec$NB_PERS),varn(rec$NB_ENF),varn(rec$REV_FOYER)),1,5)
+
+colnames(variance) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+
+variance
+```
+
+On pourrait analyser ces variances graphiquement avec l'aide de la boite à moustache.
+
+```{r p 18_moustache}
+
+#Boite à moustaches
+par(mfrow=c(1,5))
+
+
+boxplot(rec$AGE,main="Âge")
+boxplot(rec$SAL_HOR, main="salaire")
+boxplot(rec$NB_PERS,main="personne")
+boxplot(rec$NB_ENF,main="enfants")
+boxplot(rec$REV_FOYER,main="foyer")
+
+```
+
+*on remarque que la distribution des valeurs est plus étendu chez les âges*
+
+
+### 4B - Analyse par catégorie professionnelle
+
+On cherche à comparer les cadres aux professions liberales et aux employés de bureau.
+
+On calcul les indicateurs statistiques pour ces 3 modelités et on tracera par la suite les boites à moustaches pour les differentes catégories professionnelles.
+
+**pour les cadres**
+
+``` {r p20 cadre2}
+
+cadre = rec[rec["CATEGORIE"] == 1,]
+head(cadre,5)
+
+summary(cadre)
+
+#mode
+mode_cadre = matrix(c(getmode(cadre$AGE),getmode(cadre$SAL_HOR),getmode(cadre$NB_PERS),getmode(cadre$NB_ENF),getmode(cadre$REV_FOYER)),1,5)
+
+colnames(mode_cadre) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+
+mode_cadre
+
+
+#variance
+
+variance_cadre = matrix(c(varn(cadre$AGE),varn(cadre$SAL_HOR),varn(cadre$NB_PERS),varn(cadre$NB_ENF),varn(cadre$REV_FOYER)),1,5)
+
+colnames(variance_cadre) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+
+variance_cadre
+
+
+#Boites à moustaches
+
+#Boite à moustaches
+par(mfrow=c(1,5))
+
+boxplot(cadre$AGE,main="Âge")
+boxplot(cadre$SAL_HOR, main="salaire")
+boxplot(cadre$NB_PERS,main="personne")
+boxplot(cadre$NB_ENF,main="enfants")
+boxplot(cadre$REV_FOYER,main="foyer")
+
+```
+
+**pour les profession libérale**
+
+``` {r p21 liberale2}
+
+liberale = rec[rec["CATEGORIE"] == 2,]
+head(liberale,5)
+
+summary(liberale)
+
+#mode
+mode_liberale = matrix(c(getmode(liberale$AGE),getmode(liberale$SAL_HOR),getmode(liberale$NB_PERS),getmode(liberale$NB_ENF),getmode(liberale$REV_FOYER)),1,5)
+
+colnames(mode_liberale) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+
+mode_liberale
+
+
+#variance
+
+variance_liberale = matrix(c(varn(liberale$AGE),varn(liberale$SAL_HOR),varn(liberale$NB_PERS),varn(liberale$NB_ENF),varn(liberale$REV_FOYER)),1,5)
+
+colnames(variance_liberale) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+
+variance_liberale
+
+
+#Boites à moustaches
+
+#Boite à moustaches
+par(mfrow=c(1,5))
+
+boxplot(liberale$AGE,main="Âge")
+boxplot(liberale$SAL_HOR, main="salaire")
+boxplot(liberale$NB_PERS,main="personne")
+boxplot(liberale$NB_ENF,main="enfants")
+boxplot(liberale$REV_FOYER,main="foyer")
+
+```
+
+
+**pour les employés**
+
+``` {r p21 emploi2}
+
+emploi = rec[rec["CATEGORIE"] == 5,]
+head(emploi,5)
+
+summary(emploi)
+
+#mode
+mode_emploi = matrix(c(getmode(emploi$AGE),getmode(emploi$SAL_HOR),getmode(emploi$NB_PERS),getmode(emploi$NB_ENF),getmode(emploi$REV_FOYER)),1,5)
+
+colnames(mode_emploi) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+
+
+
+
+mode_emploi
+
+
+#variance
+
+variance_emploi = matrix(c(varn(emploi$AGE),varn(emploi$SAL_HOR),varn(emploi$NB_PERS),varn(emploi$NB_ENF),varn(emploi$REV_FOYER)),1,5)
+
+colnames(variance_emploi) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+
+variance_emploi
+
+
+#Boites à moustaches
+
+par(mfrow=c(1,5))
+
+boxplot(emploi$AGE,main="Âge")
+boxplot(emploi$SAL_HOR, main="salaire")
+boxplot(emploi$NB_PERS,main="personne")
+boxplot(emploi$NB_ENF,main="enfants")
+boxplot(emploi$REV_FOYER,main="foyer")
+
+```
+
+On a ensuite faire un résumer de nos 3 sous-jeu de données associés à nos catégorie socio-proféssionnelles. On pourrait commencer par faire une comparaison avec l'aide d'un calcul de moyenne sur nos variables quantitatives et on les rassemble sous forme de tableau d'information.
+
+
+```{r p23 emploi}
+
+#Tableau d'information
+
+moyenne_3C = matrix(c(mean(cadre$AGE),mean(cadre$SAL_HOR),mean(cadre$NB_PERS),mean(cadre$NB_ENF),mean(cadre$REV_FOYER),mean(liberale$AGE),mean(liberale$SAL_HOR),mean(liberale$NB_PERS),mean(liberale$NB_ENF),mean(liberale$REV_FOYER),mean(emploi$AGE),mean(emploi$SAL_HOR),mean(emploi$NB_PERS),mean(emploi$NB_ENF),mean(emploi$REV_FOYER)),3,5)
+
+
+colnames(moyenne_3C) = c('Âge','Salaire horaire','nbr personne','nbr enfant','revenu foyer')
+rownames(moyenne_3C) = c('Cadre','Profession libérale','Employé')
+
+moyenne_3C
+
+
+```
+
+
+
+# 5 - Conclusion 
+
+
+D'après nos différentes analyses et graphiques et nos varibles , on constate qu'il y a une inégalités à propos des salaires et du nombre d'enfants obtenu: on a pu les trouver en distingant nos foyers selon leurs  appartenance aux catégories socio-proféssionnel.
+
+Les plus favorisés sont les personnes de types cadre et de profession libérales ayant une vie plus propres avec un salaire élevé et qu'il ont principalement moins de personnes dans leurs habitations donc ils ont moins d'enfants. Car leurs temps de travail est plus élévé et les déplacements dans leurs emplois y est pour.
+
+Les employés ont des salaires plus faibles et un nombre de personnes à nourrir dans leurs habitations est plus élévé donc plus d'enfant. Leurs conditions de vie n'est moins favorable.
