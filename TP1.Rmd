@@ -1,0 +1,511 @@
+---
+title: "TP1 - ISIFAR"
+author: "Sofiane"
+date: '2023-10-29'
+output:
+  html_document:
+    df_print: paged
+---
+
+
+
+
+
+Le but du TP est d'apprendre à se familiarisé avec le logiciel R et de présenter un certain nombre de commande de base.
+
+# 1 - Une calculatrice
+
+R est un logociel de calcul numérique orienté vars l'analyse de données en statistique. Il s'agit avant tout d'une "grosse calculatrice" permettant de faire les opérations de calcul élémentaire. 
+
+On va essayer avec nos premiers commandes : 
+
+```{r p1}
+3+5
+2*4
+3-8
+2/3
+2.1-6*2.5
+3*2-5*(2-4)/6.02
+2^2
+```
+
+R permet ainsi de faire des calculs plus élaborés avec l'aide de plusieurs fonctions prédéfinies
+
+```{r p2}
+sqrt(4)
+abs(-4)
+log(4)
+sin(0)
+exp(1)
+```
+
+R  connait la valeur de quelques constantes mathématiques :
+
+```{r p3}
+pi
+cos(2*pi)
+```
+
+R manipules aussi des opérateurs et valeurs logiques : 
+
+```{r p4}
+1<2
+1==3
+TRUE
+F
+```
+
+Pour définir une chaîne de caractères, on emploie des guiellemets
+```{r p5}
+'a'
+'essai'
+```
+
+
+Pour une affectation, on utilise les commandes <-ou =. Si une ligne contient plusieurs instructions, elles doivent être séparées par ";".
+  . R distingue minscules et majuscules
+  . Les ligne de commande commençant par "//" ne sont pas éxécutés par R
+  . "ls()" affiche la liste des objets créés et installés dans l'environnement courant.
+
+
+```{r p6_affectation}
+#Un joli calcul
+
+a=52
+b <- 50
+A = 0
+A-b; a-b
+```
+
+
+# 2 - L'aide
+
+Lorsqu'on recherche une fonction, qu'on en a oublié le nom ou la syntaxe, l'aide du logiciel qu'on apportera sûrement toutes les informations souhaités. S'il ne nous est pas demandé de retenir par coeur totes les commandes possibles et imaginables de R, il est en revanche très important de savoir utiliser l'aide pour les retrouver.
+
+Celle -ci doit nous permettre d'acuqérir une réelle autonomie et on peut y accéder de manière différentes
+
+```{r p7_aide}
+#aide pour le graphique
+?plot
+
+#2e façon
+help(plot)
+
+#on relance l'aide en ligne
+help.start()
+
+#On affiche la liste de fonctions et objets qui contiennent le mot-clé 'mot' dans leur nom
+apropos('plot')
+
+# On affiche cette liste dans l'aide en ligne 
+??mot
+
+```
+
+
+
+# 3 - Vecteurs, matrices, tableaux
+
+
+### 3-A Vecteur
+
+L'objet de base en R est le vecteur qui peut contenir des valeurs numériques et des valeurs logiques ou des chaines de caractères.
+
+La commande 'c' permet de créer un vecteur en énumérant ses valeurs par procéssus de concaténation.
+
+```{r p8_vecteur}
+v1 = c(1,2,3,4)
+v1
+
+v2 = c(1.33,2.89,23.4)
+v2
+
+v3 = c(T,F)
+v3
+
+v4 =c('Sofiane','Samir','Aldjia','Avenor')
+v4
+
+#on calcul les longeurs de nos vecteurs
+length(v1); length(v2); length(v3);length(v4)
+```
+
+
+On peut aussi fabriquer une suite à l'aide de 'seq' en donnant une valeur minimale et maximale et le pas ou la longueur.
+
+```{r p9_sequence}
+
+#On a une vecteur de taille 5 avec un pas de 2 valant de 1 à 10
+seq(1,10,2)
+seq(1,10,by=2)
+seq(1,9,length.out=5)
+
+#On a un vecteur de taille 10 par pas de 1
+seq(1,10,by=1)
+1:10
+
+
+```
+
+La fonction scan('') permet de saisir directement le contenu d'un vecteur, peut s'averer très pratique
+
+```{r p10sequence2}
+#notes=scan('')
+#5 6 3 5 10 23 9.2
+
+#notes
+```
+
+
+La foncion 'vector(mode=,length=)' permet de créer un vecteur avec des entrées de type et ongueur données.
+
+```{r p11vector}
+vector('numeric',6)
+vector('logical',5)
+vector('character',3)
+```
+
+
+La fonction 'factor' donne à un vecteur les statut de variables qualitative ou facteur. On peut aussi construire un facteur sn spécifiant le nombre d'occurences de la même à l'aide de 'gl'.
+
+```{r p12factor}
+factor(c('brun','blond','roux','blond','roux','brun','brun'))
+factor(c(1,2,3,2,3,1,1),labels=c('brun','blond','roux'))
+```
+
+On accède aux éléments d'un vecteur en mettant le statut de variables qualitative ou facteur. On peut aussi construire un facteur en spécifiant le nombre d'occurences de la même modalité à l'aide de 'gl'.
+
+```{r p13vecteur2}
+a = rnorm(50)
+a[1]
+a[2]
+a[c(1,3,5)]
+```
+
+On peut donner des noms aux éléments d'un vecteur
+
+```{r p14vecteur3}
+v =c(1,2,3,4)
+names(v)=c('alpha','beta','gamma','delta')
+v['beta']
+a='alpha';b='beta';c='gamma';d='delta'
+v[b]
+```
+
+
+
+### 3-B Matrice
+
+La fonction "matrix" prennant en argument un vecteur, le nombre de colonnes et le nommbre de lignes, permet d'obtenir une matrice (tableau à 2 dimensions). En mettant les indices entre crochets, on peut extraire un élément, une colonne,une ligne ou une sous-matrice.
+
+Il est possible de donner des noms aux lignes et colonnes de la matrice avec 'colnames' et 'rownames'.
+
+Les fonctions 'cbind' et 'rbind' permettent de réunir 2 matrices.
+
+```{r p15 matrice1}
+mat = matrix(1:20,4,5)
+mat
+mat1 = matrix(1:20,4,5,byrow = T)
+mat1
+#Afficher la valeur situé à la 1er ligne et 5e colonne
+mat[1,5]
+#1er ligne
+mat[1,]
+#5e colonne
+mat[,5]
+
+#Afficher une sous-matrice
+mat[1:2,1:3]
+
+#Noms des colonnes
+colnames(mat) = c('C1','C2','C3','C4','C5')
+
+#Noms des lignes
+rownames(mat) = c('L1','L2','L3','L4')
+
+mat
+
+#Concaténation en colonnes
+cbind(mat,mat1)
+
+#Concaténation en lignes
+rbind(mat,mat1)
+
+```
+
+La longueur d'un vecteur est donnée par 'length' et la dimension d'une matrice par 'dim'. La fonction 'which' retourne le vecteur des indices pour lesquels la condition logique donnée en argument est vraie.
+L'option 'arr.ind=T' permet detraiter la cas des matrices
+
+```{r p16longueur}
+
+#longueur d'un vecteur
+length(v)
+
+#dimension d'une matrice
+dim(mat)
+
+#le vecteur des indices  - which
+```
+
+### 3-C Tableau
+
+On a d'autres objets de R:
+. list - liste,ensemble de vecteurs
+. array - vecteur avec dimensions; il peut y en avoir un vecteur, 2 ou plus.
+. data.frame - tableau de données, 
+
+```{r p17 tableau1}
+a= array(1:20,dim = c(4,5))
+a
+a[2,4]
+
+
+#2e tableau
+b = list(alpha=1:3, beta=c('a','b','c','d'))
+names(b)
+b$alpha
+b$beta
+b[1]
+b[2]
+
+
+#3e tableau
+c = data.frame(a)
+c
+c$a;c[,1]
+c$b;c[,2]
+c$x;c[,3]
+names(c)
+rownames(c)
+```
+
+On peut faire afficher le type d'un objet et convertir un objet en un objet de tye différent
+
+``` {r P18objet}
+class(mat)
+is.data.frame(mat)
+as.vector(mat)
+```
+
+
+#### Exercice 1
+
+``` {r p19exo1}
+#Construire un vecteur allant de 2 à 100 par pas de 2
+vec = seq(1,100,by=2)
+vec
+
+#Construire une matrice de taile 10x3 (que des 1 a la 1er colonne,2 au 2e colonne)
+v1 = rep(1,10);v2 = rep(2,10);v3 = rep(3,10)
+v1;v2;v3
+
+matrice = t(rbind(t(v1),t(v2),t(v3)))
+matrice
+
+#On va mettre les nom aux lignes et colonnes
+colnames(matrice) <- c('I','II','III')
+rownames(matrice) <- c('A','B','C','D','E','F','G','H','I','J')
+
+matrice
+
+#On transforme la matrice en DataFrame
+
+matrice1 <- data.frame(matrice)
+matrice1
+
+#On affiche la 5e colonne et la 1er ligne
+matrice1[1,]
+matrice1[,3]
+
+```
+
+
+
+# 4 - Graphiques 
+
+La fonction principale permettant de tracer un graphe est **plot** et elle possède de nombreuses options concernant le type de tracé, la couleur, les axes,le titre du graphique, ou encore la légende.
+
+Les fonctions **lines** et **points** sont utilisés pour ajouter des lignes ou des points à un graphe existant. On peut ajouter une légende à l'aide de **legend** (une fonction posséant plusieurs options).
+
+Plus généralement, du texte peut être ajouté sur le graphique grâce à **text**. Losqu'ils s'agit d'une expression mathématique, il est préférable utiliser la fonction **expression** plutôt qu'une chaine de caractère.
+
+
+``` {r p21 graphique}
+
+#On créer 2 vecteurs
+x = 1:10
+y = (1:10)^2
+
+#On rassemble ces 2 vecteurs
+a = cbind(x,y)
+
+
+par(nfrow=c(2,2)) # Création d'une fenêtre
+plot(a,cex=1.5) # Mettre la taille des points
+plot(a,type='l') #type de representation
+plot(a,type='b',lwd=2,pch=2) #Epaisseur du trait
+plot(a,type='l',lty='dotted',col=2,main='Titre du graph',xlab='abscisses',ylab='Ordonnées')
+
+#Pour ajouter une ligne
+lines(x,x,col=3)
+
+#Pour ajouter des points 
+points(x,y+2*rnorm(10),col=4,pch=16)
+
+
+legend('topleft',expression(y==x^2,y==x,'Données'),inset=0.05,lty=c('dotted','solid',NA),pch=c(NA,NA,16),col=c(2,3,4))
+```
+
+
+#### Exercice 2
+
+``` {r p22 Exo2}
+
+seq(1,10)
+
+x = sqrt(seq(1,10))
+x
+
+
+#Ajout d'une graphique
+par(mfrow=c(1,1))
+plot(x,type = 'l',lwd=3,col='red',main = "Racine carrées de 1 à 10",xlab = "Nombre entier",ylab='Racine carrée',ylim = c(0,4))
+points(x,col=4,pch=12)
+
+#Ajout d'une 2nd ligne (log(x))
+lines(log(x),col='green',lwd=3)
+points(log(x),col=4,pch=13)
+
+#Ajouter un legende
+legend('topleft',expression('Racine Carée','Logarithme'),inset = 0.04,lty=c('solid','solid'),col=c('red','green'))
+```
+
+# 5 - Fonctions
+
+Pour afficher le code d'une fonction de R, il suffit d'en entrer le nom dans la console.On peut définir ses propres fonctions, avec la syntaxe suivante :
+
+```{r p23 fonctions}
+
+mafonctions <- function(indices) {
+
+  s = 0    
+  #boucle for  
+  for (i in indices){
+    s = s+i #on calcul la somme des éléments du vecteur
+  }  
+  return(s)  #on retourne la valeur
+  }
+
+#On compile la fonction
+mafonctions(c(1,3,7,9))
+```
+
+Lorsqu'on écrit une focntion, il est préférable de la rédiger dans un éditeur de texte prévu à cet effet plutôt que dans la console R. L'éditeur installé sur les machines du SCRIPT s'appelle "Tinn-R" 
+Un fichier contenant un ensemble de fonctions et commandes R constitue un programme, qui peut être enregistré au format ".R".
+
+
+#Exercice 3
+
+On construit une fonction qui à un vecteur associe la moyenne de ses élément négatifs ou nuls.
+
+```{r p24exo3}
+
+moyenne <- function(vec){
+  m = 0
+  s = 0
+  for (i in vec){
+    if (i > 0){
+      s = s
+    }else{
+      m = m+1
+      s = s+i
+    }
+  return(s/m)
+  }
+}
+
+moyenne(c(-7,8,8,6,-97,76,-12,78,23))
+```
+
+
+
+
+# 6 - Génération de nombres aléatoires
+
+R peut générer des séquences de nombres aléatoires indépendants, suivant certaines distributions courantes comme la loi normale, binomiale, ou du Chi-2 
+La commande générique est **rnomdeladistribution(paramètres)** (par exemple **rnorm(50)** pour générer 50 nombrres tirés suivant la loi normale)
+
+On essai la commande suivantes
+
+```{r p24 loi}
+#On génère 10 nombres tirés aléatoirement suivant la loi Normale
+rnorm(10)
+
+#Idem avec une moyenne 1 et écart-type 0.1
+rnorm(10,1,0.1)
+
+#Suivant la loi binomiale
+rbinom(1,20,0.5)
+
+rbinom(10,20,0.5)
+```
+
+
+#### Exercice 4
+
+
+
+``` {r p25 exo4}
+
+#1 - On génère une matrice de taille 100x10 dont les élément sont indépendants et tirés suivant la loi normale
+r = matrix(rnorm(1000),100,10)
+r
+
+#2 - On construit un vecteur de taille 100 correspondant au maximum par ligne de la matrice précédente et de calculer sa moyenne
+
+
+#on commence par construire une fonction
+
+#On arrondie à 3 chiffres après la virgule
+r = round(r,3)
+
+#On cherche le maximum pour chaque ligne de la matrice
+
+max_r = apply(r,1,max)
+#ce résultat est sous forme d'un vecteur
+max_r
+
+#on calcule la moyenne de ce vecteur
+mean(max_r)
+
+
+
+
+#3 - On répète les 2 premiers points en utilisant la matrice 100*k 
+
+
+#on utilise la boucle d'alllant de 1 à 50 pour en faire une liste
+for (i in 1:50){
+  liste = lapply((apply(matrix(rnorm(100*i),100,i),2,max)),mean)
+}
+
+#on converti la liste en vecteur
+unlist(liste)
+
+
+
+#4 - On trace la courbe de exp(m²/2) 
+
+m = unlist(liste)
+m
+
+ex = exp((m*m)/2)
+
+plot(ex,type = 'l',lwd=3,col='red',main = "Loi Normale",xlab = "Nombre entier",ylab='Résultat')
+
+```
+
+*On remarque que les résultats provients de la loi Normale et pour i = 30 on obtient un résultat spéciale*
+
+
+
